@@ -1,7 +1,8 @@
 package main
 
 import (
-	"io"
+	"bufio"
+	"fmt"
 	"log"
 	"net"
 )
@@ -19,8 +20,15 @@ func main() {
 			log.Panic(err)
 		}
 
-		io.WriteString(conn, "\n Hello from TCP\n")
-		conn.Close()
+		go handle(conn)
 	}
+}
 
+func handle(conn net.Conn) {
+	scanner := bufio.NewScanner(conn)
+	for scanner.Scan() {
+		ln := scanner.Text()
+		fmt.Println(ln)
+	}
+	defer conn.Close()
 }
