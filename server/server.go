@@ -1,34 +1,17 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"net"
+	"net/http"
 )
 
-func main() {
-	li, err := net.Listen("tcp", ":8080")
-	if err != nil {
-		log.Panic(err)
-	}
-	defer li.Close()
+type myhttp int
 
-	for {
-		conn, err := li.Accept()
-		if err != nil {
-			log.Panic(err)
-		}
-
-		go handle(conn)
-	}
+func (m myhttp) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Hello Go")
 }
 
-func handle(conn net.Conn) {
-	scanner := bufio.NewScanner(conn)
-	for scanner.Scan() {
-		ln := scanner.Text()
-		fmt.Println(ln)
-	}
-	defer conn.Close()
+func main() {
+	var d myhttp
+	http.ListenAndServe(":8080", d)
 }
