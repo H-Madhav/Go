@@ -7,11 +7,16 @@ import (
 
 type myhttp int
 
-func (m myhttp) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello Go")
+func c(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Hello c")
+}
+
+func d(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Hello d")
 }
 
 func main() {
-	var d myhttp
-	http.ListenAndServe(":8080", d)
+	http.HandleFunc("/c", c)
+	http.HandleFunc("/d", d)
+	http.ListenAndServe(":8080", nil)
 }
